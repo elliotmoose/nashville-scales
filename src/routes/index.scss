@@ -1,0 +1,17 @@
+.button {
+  background-color: white;
+  border: 0;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f2f2f2;
+  }
+
+  &-selected {
+    background-color: #0b8343;
+    color: white;
+    &:hover {
+      background-color: #0b8343;
+    }
+  }
+}
