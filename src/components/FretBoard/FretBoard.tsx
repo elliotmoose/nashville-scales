@@ -1,12 +1,30 @@
-import { createSignal, For } from "solid-js";
+import { Accessor, createSignal, For } from "solid-js";
 import classnames from "classnames";
-import { NoteToNumber, NumberToNash, NumberToNote } from "~/core/Nashville";
+import {
+  Chord,
+  mod,
+  NoteToNumber,
+  NumberToNash,
+  NumberToNote,
+} from "~/core/Nashville";
 import "./FretBoard.scss";
+import { Mode } from "~/routes";
 
 const markers = [3, 5, 7, 9, 12, 15, 17, 19, 21];
 const strings = ["E", "A", "D", "G", "B", "E"].reverse();
 
-export default function FretBoard({ curKey, isNashville }) {
+interface FretBoardProps {
+  curKey: Accessor<number>;
+  isNashville: Accessor<boolean>;
+  curChord: Accessor<Chord>;
+  mode: Accessor<Mode>;
+}
+export default function FretBoard({
+  curKey,
+  isNashville,
+  curChord,
+  mode,
+}: FretBoardProps) {
   const [fretCounts, setFretCounts] = createSignal(20);
 
   return (
@@ -36,24 +54,41 @@ export default function FretBoard({ curKey, isNashville }) {
               <div class="string-render" />
               <For each={Array.from(Array(fretCounts()).keys())}>
                 {(i) => {
-                  const number = NoteToNumber(string) + i + 1;
+                  const number = mod(NoteToNumber(string) + i + 1, 12);
                   const note = () =>
                     isNashville()
                       ? NumberToNash(number, curKey())
                       : NumberToNote(number);
 
-                  const isRoot = () => NumberToNash(number, curKey()) === 1;
-                  const isOffKey = () =>
-                    String(NumberToNash(number, curKey())).includes(".5");
+                  let classStr = () => {
+                    if (mode() == Mode.KEY) {
+                      const isRoot = () => NumberToNash(number, curKey()) === 1;
+                      const isOffKey = () =>
+                        String(NumberToNash(number, curKey())).includes(".5");
+
+                      return classnames("note", {
+                        "note-off-key": isOffKey(),
+                        "note-root": isRoot(),
+                      });
+                    } else if (mode() === Mode.CHORD) {
+                      // in chord mode, is root if is cur
+                      const isRoot = () =>
+                        curChord()?.getRootNumber() === number;
+
+                      console.log(curChord()?.getNoteNumbers());
+                      const notInChord = () =>
+                        !curChord()?.getNoteNumbers().includes(number);
+
+                      return classnames("note", {
+                        "note-off-key": notInChord(),
+                        "note-root": isRoot(),
+                      });
+                    }
+                  };
 
                   return (
                     <div class="note-container">
-                      <div
-                        class={classnames("note", {
-                          "note-off-key": isOffKey(),
-                          "note-root": isRoot(),
-                        })}
-                      >
+                      <div class={classStr()}>
                         <p>{note()}</p>
                       </div>
                     </div>
