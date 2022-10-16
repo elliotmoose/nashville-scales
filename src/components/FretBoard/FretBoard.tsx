@@ -42,6 +42,7 @@ export default function FretBoard({
               {i + 1 === 12 && (
                 <div class="fret-dot" style={{ ["margin-top"]: "36px" }} />
               )}
+              <div class="fret-index">{i + 1}</div>
             </div>
             <div class="fret-bar"></div>
           </div>
