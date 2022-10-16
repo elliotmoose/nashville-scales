@@ -2,7 +2,7 @@
   "name": "nashville-scales",
   "scripts": {
     "dev": "solid-start dev",
-    "build": "solid-start build",
+    "build": "solid-start build --output .output",
     "start": "solid-start start"
   },
   "type": "module",
@@ -24,6 +24,7 @@
     "@suid/vite-plugin": "^0.0.3",
     "solid-js": "^1.5.7",
     "solid-start": "^0.1.0",
+    "solid-start-vercel": "^0.1.0-alpha.40",
     "undici": "^5.10.0",
     "vite-plugin-solid": "^2.3.9"
   },
