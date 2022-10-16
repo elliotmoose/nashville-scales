@@ -85,7 +85,7 @@ export default function FretBoard({
                       return classnames("note", {
                         "note-off-key": notInChord(),
                         "note-root": isChordRoot(),
-                        "note-key-root": isKeyRoot(),
+                        "note-key-root": !isChordRoot() && isKeyRoot(),
                       });
                     }
                   };
