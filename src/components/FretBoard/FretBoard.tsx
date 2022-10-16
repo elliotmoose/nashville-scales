@@ -72,8 +72,11 @@ export default function FretBoard({
                       });
                     } else if (mode() === Mode.CHORD) {
                       // in chord mode, is root if is cur
-                      const isRoot = () =>
+                      const isChordRoot = () =>
                         curChord()?.getRootNumber() === number;
+
+                      const isKeyRoot = () =>
+                        NumberToNash(number, curKey()) === 1;
 
                       console.log(curChord()?.getNoteNumbers());
                       const notInChord = () =>
@@ -81,7 +84,8 @@ export default function FretBoard({
 
                       return classnames("note", {
                         "note-off-key": notInChord(),
-                        "note-root": isRoot(),
+                        "note-root": isChordRoot(),
+                        "note-key-root": isKeyRoot(),
                       });
                     }
                   };
